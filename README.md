@@ -1,0 +1,1 @@
+This is a simple CHECKERS game written by Kenneth Greer at App Academy
