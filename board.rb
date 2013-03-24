@@ -13,7 +13,7 @@ class Board
     
     make_board 
     set_pieces
-    display_board
+    display
  
   end
   
@@ -29,34 +29,39 @@ class Board
     @rows.each_with_index do |row, i|
       row.each_with_index do |spot, j|
         if i < 3 && (i+j) % 2 != 0
-          @rows[i][j] = Piece.new("red", [i,j])
+          @rows[i][j] = Piece.new(:red, [i,j])
           @pieces << @rows[i][j]
         end
         if i > 4 && (i+j) % 2 != 0
-          @rows[i][j] = Piece.new("black", [i,j])
+          @rows[i][j] = Piece.new(:black, [i,j])
           @pieces << @rows[i][j]
         end
       end
     end
   end
   
-  def display_board
+  def piece_at(pos)
+    i, j = pos
+    @rows[i][j]
+  end
+  
+  def display
     system("clear")
-    puts"   0  1  2  3  4  5  6  7 "
+    puts"   A  B  C  D  E  F  G  H "
     @rows.each_with_index do |row, i|
       row_string = i.to_s + " "
       row.each_with_index do |spot, j|
         if (i+j) % 2 == 0
-          row_string << "   ".colorize(:background => :red)
+          row_string << "   ".colorize(:background => :white)
         else
           if spot == nil
-            row_string << "   ".colorize(:background => :white)
-          elsif spot.color == "black"
-            row_string << " ⬤ ".colorize(:color => :black, :background => :white) unless spot.is_kinged?
-            row_string << " Ⓚ ".colorize(:color => :black, :background => :white) if spot.is_kinged?
+            row_string << "   ".colorize(:background => :cyan)
+          elsif spot.color == :black
+            row_string << " ⬤ ".colorize(:color => :black, :background => :cyan) unless spot.is_kinged?
+            row_string << " Ⓚ ".colorize(:color => :black, :background => :cyan) if spot.is_kinged?
           else
-            row_string << " ⬤ ".colorize(:color => :red, :background => :white) unless spot.is_kinged?
-            row_string << " Ⓚ ".colorize(:color => :red, :background => :white) if spot.is_kinged?
+            row_string << " ⬤ ".colorize(:color => :red, :background => :cyan) unless spot.is_kinged?
+            row_string << " Ⓚ ".colorize(:color => :red, :background => :cyan) if spot.is_kinged?
           end
         end
       end
@@ -82,8 +87,8 @@ class Board
       "You can't move like that."
     end
     
-    display_board ### !!! this needs to be moved
-  end ### !!! display_board needs to be moved
+    display ### !!! this needs to be moved
+  end ### !!! display needs to be moved
   
   def remove_piece(pos)
     i, j = pos
