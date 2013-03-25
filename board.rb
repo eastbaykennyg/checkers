@@ -76,15 +76,10 @@ class Board
     i, j = end_pos
     temp_vector = [ i - x, j - y ].map! { |x| x / (x.abs) }
     
-    
-    if @rows[x][y] == nil # =================================> if start position is empty
-      "You have to select a piece."
-    elsif @rows[i][j] != nil # ==============================> if end position is NOT empty 
-      "You can't move there."
-    elsif @rows[x][y].vector.include?(temp_vector) # ========> confirms vector before making move
+    if @rows[x][y].vector.include?(temp_vector) # ========> confirms vector before making move
       @rows[i][j], @rows[x][y] = @rows[x][y], @rows[i][j]
     else
-      "You can't move like that."
+      puts "You can't move like that"
     end
     
     display ### !!! this needs to be moved
@@ -111,6 +106,7 @@ class Board
       (i+x) < 8 && (j+y) < 8 ? piece.neighbors << @rows[i + x][j + y] : piece.neighbors << "oob"
     end
     
+    piece.neighbors
   end
   
 end
