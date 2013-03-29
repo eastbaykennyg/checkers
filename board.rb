@@ -29,11 +29,11 @@ class Board
     @rows.each_with_index do |row, i|
       row.each_with_index do |spot, j|
         if i < 3 && (i+j) % 2 != 0
-          @rows[i][j] = Piece.new(:red, [i,j])
+          @rows[i][j] = Piece.new(:red, [i,j], self)
           @pieces << @rows[i][j]
         end
         if i > 4 && (i+j) % 2 != 0
-          @rows[i][j] = Piece.new(:black, [i,j])
+          @rows[i][j] = Piece.new(:black, [i,j], self)
           @pieces << @rows[i][j]
         end
       end
@@ -98,7 +98,6 @@ class Board
 
     piece.vector.each do |i, j| 
       (i+x) < 8 && (j+y) < 8 ? piece.neighbors << @rows[i + x][j + y] : piece.neighbors << "oob"
-      p @rows[i + x][j + y]
     end
     piece.vector.each do |i, j| 
       i *= 2
@@ -109,4 +108,5 @@ class Board
     piece.neighbors
   end
   
+
 end

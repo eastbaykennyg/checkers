@@ -1,4 +1,4 @@
-require_relative 'board.rb'
+require './board.rb'
 require 'debugger'
 
 ALPHAS = {
@@ -47,6 +47,7 @@ class HumanPlayer
     start_pos = nil
     neighbors = []
     piece_color = nil
+    @board.display
     puts "#{@color.capitalize} player's turn,"
 
     until start_pos != nil
@@ -54,12 +55,14 @@ class HumanPlayer
       temp = gets.chomp.downcase.split("")
       start_pos = [temp[0].to_i, ALPHAS[temp[1]]]
       unless @board.piece_at(start_pos) != nil # ===========> if selection is empty
+        @board.display
         puts "There's no piece there"
         start_pos = nil
         next
       else
         piece_color = @board.piece_at(start_pos).color
         if piece_color != @color # =========================> if selection is wrong color
+          @board.display
           puts "That's not your piece" 
           start_pos = nil
           next
@@ -71,6 +74,7 @@ class HumanPlayer
       if nbrs[0...(nbrs.length/2)].include?(nil) || !nbrs[0...(nbrs.length/2)].each{ |x| x.color == piece_color }
         start_pos
       else
+        @board.display
         puts "You can't move that piece"
         start_pos = nil
       end 
