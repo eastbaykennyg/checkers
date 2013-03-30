@@ -9,7 +9,7 @@ ALPHAS = {
   "e" => 4,
   "f" => 5,
   "g" => 6,
-  "h" => 7
+  "h" => 7,
   
 }
 
@@ -29,6 +29,11 @@ class Game
     nil
   end
   
+  def play
+    
+    
+  end
+  
 end
 
 
@@ -36,11 +41,11 @@ end
 class HumanPlayer
   
   attr_reader :color, :board
-  attr_accessor :pieces
+  attr_accessor :pieces, :force_moves
   
   def initialize(color, board)
     @color, @board = color, board
-    @pieces = @board.pieces.select {|piece| piece.color == @color}
+    update_pieces
   end
 
   def pick_piece
@@ -53,6 +58,12 @@ class HumanPlayer
     until start_pos != nil
       puts "Please select a piece to move (Example: 2A)"
       temp = gets.chomp.downcase.split("")
+      unless (0..7).include?(temp[0].to_i) && ALPHAS.include?(temp[1])
+        @board.display
+        puts "That's not even a proper coordinate" 
+        start_pos = nil
+        next
+      end
       start_pos = [temp[0].to_i, ALPHAS[temp[1]]]
       unless @board.piece_at(start_pos) != nil # ===========> if selection is empty
         @board.display
@@ -70,18 +81,40 @@ class HumanPlayer
       end
       nbrs = @board.find_neighbors(start_pos) # ============> finds surrounding pieces
  
-      # ====================================================> checks to see if immediate neighbors are player's color
-      if nbrs[0...(nbrs.length/2)].include?(nil) || !nbrs[0...(nbrs.length/2)].each{ |x| x.color == piece_color }
+      if @board.piece_at(start_pos).can_move?
         start_pos
       else
         @board.display
         puts "You can't move that piece"
         start_pos = nil
       end 
-      
     end
     
     start_pos
+  end
+  
+  def update_pieces
+    @pieces = []
+    @board.rows.each do |row|
+      row.each do |spot|
+        unless spot.nil?
+          @pieces << spot unless spot.color != color
+        end
+      end
+    end
+  end
+  
+  def force_moves?
+    ans = false
+    @force_moves = []
+    self.pieces.each do |piece|
+      if piece.can_jump?
+        @force_moves << piece.pos
+        ans = true
+      end
+    end
+    
+    ans
   end
 
 end #<===== HumanPlayerClass end

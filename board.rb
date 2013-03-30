@@ -77,7 +77,9 @@ class Board
     temp_vector = [ i - x, j - y ].map! { |x| x / (x.abs) }
     
     if @rows[x][y].vector.include?(temp_vector) # ========> confirms vector before making move
+      @rows[x][y].pos = [i, j]
       @rows[i][j], @rows[x][y] = @rows[x][y], @rows[i][j]
+      
     else
       puts "You can't move like that"
     end
@@ -94,10 +96,12 @@ class Board
   def find_neighbors(pos)
     x, y = pos
     piece = @rows[x][y]
+    
+    return if piece.nil?
     piece.neighbors = []
 
     piece.vector.each do |i, j| 
-      (i+x) < 8 && (j+y) < 8 ? piece.neighbors << @rows[i + x][j + y] : piece.neighbors << "oob"
+      (i+x) < 8 && (j+y) < 8 ? piece.neighbors << @rows[i + x][j + y] : piece.neighbors << "oob" 
     end
     piece.vector.each do |i, j| 
       i *= 2
